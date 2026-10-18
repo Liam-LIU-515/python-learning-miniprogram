@@ -1,0 +1,34 @@
+<view class="page kpage">
+  <view class="k-hero">
+    <image class="k-cover" src="{{cover}}" mode="widthFix"></image>
+    <view class="k-hero-title">🐍 Python 基础 · 一张图总结</view>
+    <view class="k-hero-sub">学完 10 个章节，你就掌握了下面这些！顺着箭头往下看，就是 Liam 的进阶路线。</view>
+  </view>
+
+  <scroll-view scroll-y="true" class="k-scroll">
+    <view wx:for="{{knowledge}}" wx:for-item="k" wx:for-index="i" wx:key="ch" class="k-card">
+      <view class="k-card-top">
+        <view class="k-badge">{{k.ch}}</view>
+        <view class="k-icon">{{k.icon}}</view>
+        <view class="k-title">{{k.title}}</view>
+      </view>
+      <view class="k-sub">{{k.sub}}</view>
+      <view class="k-points">
+        <view wx:for="{{k.points}}" wx:for-item="p" wx:key="*this" class="k-point">• {{p}}</view>
+      </view>
+      <view class="k-motto">💡 口诀：{{k.motto}}</view>
+      <view wx:if="{{i < knowledge.length - 1}}" class="k-arrow">↓</view>
+    </view>
+
+    <view class="k-foot">
+      <view>🎓 掌握以上 10 块，Python 基础就稳了。</view>
+      <view class="k-foot-sub">继续练习，把每一张知识卡都收入囊中吧！</view>
+    </view>
+    <view class="k-safe">本小程序完全免费，无任何广告或付费内容。</view>
+  </scroll-view>
+
+  <view class="k-actions">
+    <button class="k-btn" bindtap="goReview">去复习测验 →</button>
+    <button class="k-btn ghost" bindtap="goGame">去练习 →</button>
+  </view>
+</view>

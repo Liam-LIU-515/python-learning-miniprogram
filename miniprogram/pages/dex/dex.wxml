@@ -1,0 +1,34 @@
+<view class="page">
+  <view class="dex-head">
+    <view class="dex-title">🎁 Python 知识卡</view>
+    <view class="dex-sub">沿学习路径收集知识卡，集齐 20 张就覆盖了 Python 基础的全部补充知识点</view>
+    <view class="dex-progress">
+      <view class="dex-bar"><view class="dex-fill" style="width:{{count * 100 / total}}%"></view></view>
+      <view class="dex-num">{{count}} / {{total}}</view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y="true" class="dex-scroll">
+    <view class="dex-grid">
+      <view wx:for="{{items}}" wx:key="key" class="dex-item {{item.has ? 'got' : 'miss'}} {{openKey===item.key ? 'open' : ''}}"
+            data-key="{{item.key}}" bindtap="toggle">
+        <view class="di-icon">{{item.icon}}</view>
+        <view class="di-name">{{item.name}}</view>
+        <view class="di-ch">第 {{item.ch}} 关 · {{item.title}}</view>
+        <view wx:if="{{openKey===item.key}}" class="di-tips">
+          <view wx:for="{{item.tips}}" wx:for-item="t" wx:key="*this" class="di-tip">• {{t}}</view>
+        </view>
+        <view wx:elif="{{!item.has}}" class="di-miss">学到对应位置即可解锁</view>
+        <view wx:else class="di-more">点开看知识点 ↓</view>
+      </view>
+    </view>
+
+    <view class="dex-safe">本小程序完全免费，无任何广告或付费内容。</view>
+  </scroll-view>
+
+  <view class="dex-actions">
+    <button class="dex-btn" bindtap="goIndex">回章节目录 →</button>
+  </view>
+
+  <view wx:if="{{toast}}" class="toast">{{toast}}</view>
+</view>

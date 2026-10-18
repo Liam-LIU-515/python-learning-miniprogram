@@ -1,0 +1,19 @@
+# ---------- 微信开发者工具 ----------
+# 个人本地配置（含本机路径、编译条件等），不入库
+project.private.config.json
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ---------- 依赖 ----------
+node_modules/
+miniprogram_npm/
+
+# ---------- 日志 / 缓存 ----------
+*.log
+npm-debug.log*
+yarn-error.log
+
+# ---------- 已弃用目录（如需恢复论坛再自行引入） ----------
+cloudfunctions/

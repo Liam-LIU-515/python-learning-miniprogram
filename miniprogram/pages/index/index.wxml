@@ -1,0 +1,226 @@
+<view class="page">
+
+  <!-- 故事开头 -->
+  <view wx:if="{{panel==='story'}}" class="story">
+    <image class="cover" src="{{cover}}" mode="widthFix"></image>
+    <view class="story-card">
+      <view class="story-title">🤖 Python 语法练习</view>
+      <view class="story-text">
+        <view class="st-p">面向初学者的 Python 语法练习与知识点速查工具，跟着小助手 Liam 学完 10 个章节。</view>
+        <view class="st-p">每一章是一条可视化学习路径：沿路依次会遇到「知识讲解」「写代码练习」和「知识卡」，系统会按你的学习情况自动安排顺序。</view>
+        <view class="st-p">配套提供：知识点速查、随机测验、错题本，以及 Python 基础掌握度统计。</view>
+        <view class="st-p free">🎁 本小程序完全免费，没有任何广告或付费内容。</view>
+      </view>
+      <button class="btn-primary big" bindtap="onTapChapter" data-ch="1">从第 1 章开始 ▶</button>
+      <button class="btn-ghost" bindtap="onStart">全部章节目录</button>
+      <button class="btn-ghost" bindtap="onGoKnowledge">知识点速查</button>
+      <button class="btn-ghost" bindtap="onGoReview">随机测验 / 错题本</button>
+      <view class="ver-badge">版本 {{version}}</view>
+    </view>
+  </view>
+
+  <!-- 大关地图 -->
+  <view wx:if="{{panel==='map'}}" class="map-wrap">
+    <view class="map-head">
+      <view class="map-title">🗺️ 学习章节目录</view>
+      <view class="map-sub">跟着 Liam 学完 10 个章节，掌握 Python 基础 · 本程序完全免费</view>
+      <view class="map-stars">⭐ 掌握星级 {{totalStars}}/30 · 🎁 知识卡 {{boxCount}}/20</view>
+      <view class="ver-badge">版本 {{version}}</view>
+    </view>
+    <scroll-view scroll-y="true" class="map-scroll">
+      <view wx:for="{{chapters}}" wx:for-item="ch" wx:for-index="i" wx:key="ch" class="node-row">
+        <view class="node {{chapterStatus[i]==='locked' ? 'locked' : (chapterStatus[i]==='done' ? 'done' : 'open')}} {{chapterStatus[i]==='current' ? 'current' : ''}}"
+              data-ch="{{ch.ch}}" bindtap="onTapChapter">
+          <view class="node-icon">{{ch.icon}}</view>
+          <view class="node-body">
+            <view class="node-title">第 {{ch.ch}} 章 · {{ch.title}}</view>
+            <view class="node-sub">{{ch.sub}}</view>
+            <view class="node-stars">{{chapterStarsTxt[i]}}</view>
+          </view>
+          <view class="node-status">{{chapterStatus[i]==='done' ? '✅' : (chapterStatus[i]==='locked' ? '🔒' : '▶')}}</view>
+        </view>
+        <view wx:if="{{i < chapters.length - 1}}" class="node-link"></view>
+      </view>
+    </scroll-view>
+    <view class="hud">
+      <view class="hud-item">⭐ {{score}}</view>
+      <view class="hud-item">🏅 {{gold}}</view>
+    </view>
+    <button class="btn-ghost small" bindtap="onGoKnowledge">看知识点</button>
+    <button class="btn-ghost small" bindtap="onGoReview">复习测验</button>
+    <button class="btn-ghost small" bindtap="onGoDex">🎁 知识卡册 ({{boxCount}}/20)</button>
+  </view>
+
+  <!-- 动画剧场：进入每大关前的过场（纯 CSS + 微信 emoji，不消耗积分） -->
+  <view wx:if="{{panel==='theater'}}" class="overlay theater">
+    <view class="theater-stage">
+      <view class="theater-icon">{{theaterMeta.icon}}</view>
+      <view class="theater-ch">第 {{theaterMeta.ch}} 章</view>
+      <view class="theater-title">{{theaterMeta.title}}</view>
+      <view class="theater-sub">{{theaterMeta.sub}}</view>
+      <view class="theater-line">🤖 Liam 打开了「{{theaterMeta.title}}」这一章……沿路的小格子里藏着知识讲解、写代码练习和知识卡，开始学习吧！</view>
+      <button class="btn-primary big" bindtap="onEnterMaze">进入本章 ▶</button>
+    </view>
+  </view>
+
+  <!-- 迷宫主界面（单座大关） -->
+  <view wx:if="{{panel==='maze'}}" class="maze-wrap">
+    <view class="maze-head">
+      <view class="ch-name">{{curChapterMeta.icon}} 第 {{curChapterMeta.ch}} 章 · {{curChapterMeta.title}}</view>
+      <view class="ch-progress">本关 {{chapterProgress}}/{{chapterTotal}}</view>
+    </view>
+    <view class="hud">
+      <view class="hud-item">⭐ {{score}}</view>
+      <view class="hud-item">🏅 {{gold}}</view>
+    </view>
+
+    <scroll-view scroll-x="true" scroll-y="true" class="maze-scroll"
+                 bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
+      <view class="maze">
+        <view wx:for="{{maze}}" wx:for-item="row" wx:for-index="ri" wx:key="ri" class="maze-row">
+          <view wx:for="{{row}}" wx:for-item="cell" wx:for-index="ci" wx:key="ci"
+                class="cell {{cell===1 ? 'wall' : 'path'}} {{robotR===ri && robotC===ci ? 'robot' : ''}} {{endR===ri && endC===ci ? 'end' : ''}}">
+            <text wx:if="{{robotR===ri && robotC===ci}}" class="cell-emoji">🤖</text>
+            <text wx:elif="{{endR===ri && endC===ci}}" class="cell-emoji">🏁</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="dpad">
+      <button class="dbtn" bindtap="onUp">▲</button>
+      <view class="drow">
+        <button class="dbtn" bindtap="onLeft">◀</button>
+        <button class="dbtn" bindtap="onDown">▼</button>
+        <button class="dbtn" bindtap="onRight">▶</button>
+      </view>
+    </view>
+
+    <view class="maze-tip">用方向键 / 滑动沿学习路径前进，每个小格子都要走一遍，走完本章才算学完～</view>
+    <view class="btn-row maze-btns">
+      <button class="btn-ghost small" bindtap="onBackToMap">返回目录</button>
+      <button class="btn-ghost small" bindtap="onRestart">重新开始</button>
+    </view>
+
+    <view wx:if="{{toast}}" class="toast">{{toast}}</view>
+  </view>
+
+  <!-- 教学卡片 -->
+  <view wx:if="{{panel==='teach'}}" class="overlay">
+    <view class="card">
+      <view class="card-head">{{curIcon}} {{curTitle}}</view>
+      <scroll-view scroll-y="true" class="teach-text"><text>{{curText}}</text></scroll-view>
+      <button class="btn-primary" bindtap="onTeachDone">我学会啦，继续 →</button>
+    </view>
+  </view>
+
+  <!-- 代码挑战 -->
+  <view wx:if="{{panel==='code'}}" class="overlay">
+    <view class="card">
+      <view class="card-head">{{curIcon}} {{curTitle}}</view>
+      <scroll-view scroll-y="true" class="q-text"><text>{{curText}}</text></scroll-view>
+
+      <textarea class="code-input" value="{{userInput}}" bindinput="onInput"
+                placeholder="在这里写你的 Python 代码…" auto-height="true"></textarea>
+
+      <view wx:if="{{showHint}}" class="hint-box">💡 提示：{{curHint}}</view>
+
+      <view wx:if="{{feedback}}" class="feedback {{feedback.type}}">{{feedback.msg}}</view>
+
+      <view wx:if="{{showAnswer}}" class="answer-box">
+        <view class="answer-label">参考答案：</view>
+        <text class="answer-code">{{curAnswer}}</text>
+      </view>
+
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onToggleHint">提示</button>
+        <button class="btn-ghost" bindtap="onShowAnswer">看答案</button>
+        <button class="btn-primary" bindtap="onSubmit">提交</button>
+      </view>
+      <button class="btn-ghost small skip-btn" bindtap="onSkipCode">理解啦，先跳过这题</button>
+    </view>
+  </view>
+
+  <!-- 知识卡（补充知识点） -->
+  <view wx:if="{{panel==='blindbox'}}" class="overlay">
+    <view class="card blindbox">
+      <view class="bb-icon">{{curIcon}}</view>
+      <view class="bb-name">🎁 知识卡 · {{curTitle}}</view>
+      <view class="bb-tips">
+        <view wx:for="{{curTips}}" wx:for-item="tip" wx:key="*this" class="bb-tip">• {{tip}}</view>
+      </view>
+      <button class="btn-primary" bindtap="onBlindboxDone">收下知识 →</button>
+    </view>
+  </view>
+
+  <!-- 章节通关 -->
+  <view wx:if="{{panel==='levelclear'}}" class="overlay finale">
+    <view class="card">
+      <view class="finale-emoji">🎉</view>
+      <view class="finale-title">本章学完！</view>
+      <view class="finale-sub">{{curChapterMeta.icon}} 第 {{curChapterMeta.ch}} 章 · {{curChapterMeta.title}} 完成</view>
+      <view class="stars-big">{{curStarsTxt}}</view>
+      <view class="stars-tip">全部一次答对且不看答案、不跳过 = ⭐⭐⭐</view>
+      <view class="finale-stats">
+        <view class="stat"><view class="stat-emoji">⭐</view><view class="stat-num">{{score}}</view><view class="stat-label">得分</view></view>
+        <view class="stat"><view class="stat-emoji">🏅</view><view class="stat-num">{{gold}}</view><view class="stat-label">积分</view></view>
+      </view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onTapChapter" data-ch="{{curChapterMeta.ch}}">重练本章（换新路径）</button>
+      </view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onBackToMap">返回目录</button>
+        <button class="btn-primary" bindtap="onNextChapter">下一章 ▶</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 毕业结局 -->
+  <view wx:if="{{panel==='finale'}}" class="overlay finale">
+    <view class="card">
+      <view class="finale-emoji">🎓</view>
+      <view class="finale-title">恭喜毕业！</view>
+      <view class="finale-sub">你已学完 10 个章节，掌握 Python 基础，Liam 为你骄傲！</view>
+      <view class="finale-stats">
+        <view class="stat"><view class="stat-emoji">⭐</view><view class="stat-num">{{finalScore}}</view><view class="stat-label">得分</view></view>
+        <view class="stat"><view class="stat-emoji">🏅</view><view class="stat-num">{{finalGold}}</view><view class="stat-label">积分</view></view>
+        <view class="stat"><view class="stat-emoji">📗</view><view class="stat-num">{{finalLessons}}</view><view class="stat-label">章节</view></view>
+        <view class="stat"><view class="stat-emoji">✏️</view><view class="stat-num">{{finalCode}}</view><view class="stat-label">练习题</view></view>
+        <view class="stat"><view class="stat-emoji">🎁</view><view class="stat-num">{{finalBox}}</view><view class="stat-label">知识卡</view></view>
+      </view>
+      <view wx:if="{{finalMastery>0}}" class="mastery">
+        <view class="mastery-label">📊 Python 基础掌握度</view>
+        <view class="mastery-bar"><view class="mastery-fill" style="width:{{finalMastery}}%"></view></view>
+        <view class="mastery-pct">{{finalMastery}}%</view>
+      </view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onRestart">再学一遍</button>
+        <button class="btn-primary" bindtap="onGoKnowledge">看知识点总结</button>
+      </view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onGoReview">随机测验 / 错题本</button>
+      </view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onMakePoster">生成学习海报</button>
+        <button class="btn-ghost" open-type="share">分享给好友</button>
+      </view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onGoDex">🎁 知识卡册 ({{boxCount}}/20)</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分享海报预览 -->
+  <view wx:if="{{showPoster}}" class="overlay poster-overlay">
+    <view class="poster-card">
+      <image src="{{posterImage}}" class="poster-img" mode="widthFix"></image>
+      <view class="poster-hint">长按图片可转发给好友 · 本程序不申请任何隐私权限</view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onClosePoster">关闭</button>
+        <button class="btn-primary" open-type="share">转发给好友</button>
+      </view>
+    </view>
+  </view>
+  <canvas canvas-id="posterCanvas" class="poster-canvas"></canvas>
+
+</view>

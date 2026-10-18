@@ -1,0 +1,78 @@
+/* Python 知识卡册 —— 卡通明亮主题 */
+page {
+  --primary: #1E88E5;
+  --primary-d: #1565C0;
+}
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #EAF6FF 0%, #F3FBF7 100%);
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #2B3A4A;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.dex-head {
+  margin: 24rpx 24rpx 8rpx;
+  padding: 30rpx 28rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(31,136,229,0.12);
+  text-align: center;
+}
+.dex-title { font-size: 42rpx; font-weight: 900; color: var(--primary-d); }
+.dex-sub { margin-top: 12rpx; font-size: 25rpx; line-height: 1.6; color: #607D8B; }
+.dex-progress { margin-top: 20rpx; display: flex; align-items: center; gap: 18rpx; }
+.dex-bar { flex: 1; height: 20rpx; background: #E3F0FB; border-radius: 999rpx; overflow: hidden; }
+.dex-fill { height: 100%; background: linear-gradient(90deg, #FFD54F, #FB8C00); border-radius: 999rpx; transition: width .4s ease; }
+.dex-num { font-size: 28rpx; font-weight: 800; color: #F9A825; }
+
+.dex-scroll { flex: 1; padding: 16rpx 24rpx 30rpx; box-sizing: border-box; }
+.dex-grid { display: flex; flex-wrap: wrap; gap: 16rpx; }
+.dex-item {
+  width: calc(50% - 8rpx);
+  background: #fff;
+  border-radius: 22rpx;
+  padding: 22rpx 18rpx;
+  box-sizing: border-box;
+  box-shadow: 0 6rpx 18rpx rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.dex-item.miss { opacity: 0.62; background: #F4F7FA; }
+.dex-item.open { width: 100%; }
+.di-icon { font-size: 66rpx; line-height: 1; margin-bottom: 10rpx; }
+.dex-item.got .di-icon { animation: pop .5s ease; }
+.di-name { font-size: 28rpx; font-weight: 800; color: var(--primary-d); }
+.di-ch { margin-top: 6rpx; font-size: 22rpx; color: #90A4AE; }
+.di-miss { margin-top: 10rpx; font-size: 22rpx; color: #B0BEC5; }
+.di-more { margin-top: 10rpx; font-size: 22rpx; color: #4FC3F7; }
+.di-tips { width: 100%; margin-top: 14rpx; text-align: left; }
+.di-tip {
+  font-size: 25rpx; line-height: 1.7; color: #37474F;
+  background: #F6FBFF; border-radius: 12rpx; padding: 12rpx 16rpx; margin-bottom: 10rpx;
+}
+.dex-safe { margin-top: 26rpx; text-align: center; font-size: 23rpx; color: #9AA7B4; }
+
+.dex-actions { padding: 18rpx 24rpx 40rpx; }
+.dex-btn {
+  width: 100%;
+  border-radius: 999rpx;
+  font-size: 30rpx; font-weight: 700; padding: 22rpx 0; line-height: 1.4; border: none;
+  background: var(--primary); color: #fff;
+  box-shadow: 0 6rpx 16rpx rgba(30,136,229,0.35);
+}
+.dex-btn:active { background: var(--primary-d); }
+
+@keyframes pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.toast {
+  position: fixed; left: 50%; bottom: 120rpx; transform: translateX(-50%);
+  background: rgba(0,0,0,0.78); color: #fff; font-size: 28rpx;
+  padding: 16rpx 30rpx; border-radius: 999rpx; z-index: 60;
+}

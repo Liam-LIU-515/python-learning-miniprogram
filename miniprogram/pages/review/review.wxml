@@ -1,0 +1,93 @@
+<view class="page">
+
+  <!-- 顶部 tab -->
+  <view class="tabs">
+    <view class="tab {{tab==='quiz' ? 'on' : ''}}" data-tab="quiz" bindtap="switchTab">📝 随机测验</view>
+    <view class="tab {{tab==='wrong' ? 'on' : ''}}" data-tab="wrong" bindtap="switchTab">📕 错题本 ({{wrongCount}})</view>
+  </view>
+
+  <!-- ===== 随机测验 ===== -->
+  <view wx:if="{{tab==='quiz'}}" class="body">
+
+    <!-- 菜单 -->
+    <view wx:if="{{mode==='menu'}}" class="menu">
+      <view class="menu-emoji">📝</view>
+      <view class="menu-title">复习测验</view>
+      <view class="menu-text">
+        <view class="mt-p">从 40 道「自己写 Python」关卡题里随机抽取 10 道考考你。</view>
+        <view class="mt-p">答错会自动收进错题本，下次针对性复习。</view>
+        <view class="mt-p free">🎁 本小程序完全免费，无任何广告或付费内容。</view>
+      </view>
+      <button class="btn-primary big" bindtap="startQuiz">开始测验 ▶</button>
+      <button class="btn-ghost" bindtap="goKnowledge">看知识点总结</button>
+    </view>
+
+    <!-- 答题中 -->
+    <view wx:elif="{{mode==='doing'}}" class="card">
+      <view class="q-head">
+        <view class="q-no">{{index}} / {{total}}</view>
+        <view class="q-title">{{cur.icon}} {{cur.title}}</view>
+      </view>
+      <scroll-view scroll-y="true" class="q-text"><text>{{cur.text}}</text></scroll-view>
+
+      <textarea class="code-input" value="{{userInput}}" bindinput="onInput"
+                placeholder="在这里写你的 Python 代码…" auto-height="true"></textarea>
+
+      <view wx:if="{{showHint}}" class="hint-box">💡 提示：{{cur.hint}}</view>
+      <view wx:if="{{feedback}}" class="feedback {{feedback.type}}">{{feedback.msg}}</view>
+      <view wx:if="{{showAnswer}}" class="answer-box">
+        <view class="answer-label">参考答案：</view>
+        <text class="answer-code">{{cur.answer}}</text>
+      </view>
+
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="onToggleHint">提示</button>
+        <button class="btn-ghost" bindtap="onShowAnswer">看答案</button>
+        <button class="btn-primary" bindtap="onSubmit">提交</button>
+      </view>
+      <button class="btn-ghost small skip-btn" bindtap="onSkip">这题先跳过</button>
+    </view>
+
+    <!-- 成绩报告 -->
+    <view wx:else class="card report">
+      <view class="report-emoji">🏆</view>
+      <view class="report-title">测验完成！</view>
+      <view class="report-stats">
+        <view class="rstat"><view class="rnum">{{report.total}}</view><view class="rlabel">总题数</view></view>
+        <view class="rstat"><view class="rnum ok">{{report.correct}}</view><view class="rlabel">正确</view></view>
+        <view class="rstat"><view class="rnum bad">{{report.wrong}}</view><view class="rlabel">再练</view></view>
+      </view>
+      <view class="report-acc">正确率 {{report.acc}}% · 得分 {{report.score}}</view>
+      <view class="btn-row">
+        <button class="btn-ghost" bindtap="startQuiz">再测一次</button>
+        <button class="btn-primary" bindtap="switchTab" data-tab="wrong">看错题本</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 错题本 ===== -->
+  <view wx:else class="body">
+    <view wx:if="{{wrongList.length===0}}" class="empty">
+      <view class="empty-emoji">🎉</view>
+      <view class="empty-text">
+        <view class="mt-p">错题本还是空的！</view>
+        <view class="mt-p">说明你答得都不错，继续保持～</view>
+      </view>
+      <button class="btn-primary" bindtap="switchTab" data-tab="quiz">去做测验</button>
+    </view>
+
+    <view wx:else>
+      <view class="wrong-tip">共 {{wrongCount}} 道待巩固，点「练习」单题重做，或一键全部重练。</view>
+      <button class="btn-primary block" bindtap="startWrongPractice">全部重练 ▶</button>
+      <button class="btn-ghost block danger" bindtap="clearWrong">清空错题本</button>
+
+      <view wx:for="{{wrongList}}" wx:key="key" class="wrong-item">
+        <view class="wi-head">{{item.icon}} 第 {{item.title}} 关</view>
+        <view class="wi-text">{{item.text}}</view>
+        <button class="btn-ghost small" data-key="{{item.key}}" bindtap="practiceOne">练习这题</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{toast}}" class="toast">{{toast}}</view>
+</view>

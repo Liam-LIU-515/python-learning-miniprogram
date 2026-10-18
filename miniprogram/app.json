@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/knowledge/knowledge",
+    "pages/review/review",
+    "pages/dex/dex"
+  ],
+  "window": {
+    "backgroundColor": "#EAF4FF",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#4FC3F7",
+    "navigationBarTitleText": "Python 语法练习",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#90A4AE",
+    "selectedColor": "#1E88E5",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "练习"
+      },
+      {
+        "pagePath": "pages/knowledge/knowledge",
+        "text": "知识点"
+      },
+      {
+        "pagePath": "pages/review/review",
+        "text": "复习"
+      },
+      {
+        "pagePath": "pages/dex/dex",
+        "text": "知识卡"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}
