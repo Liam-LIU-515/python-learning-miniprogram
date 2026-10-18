@@ -1,3 +1,4 @@
+// © 2026 LiuAohua. 版权所有，仅供学习参考，禁止商用与二次分发。
 // pages/knowledge/knowledge.js —— Python 基础「一张图」总结
 // 内容对应练习路径的 10 个章节，纯本地、无需云、零积分消耗。
 Page({

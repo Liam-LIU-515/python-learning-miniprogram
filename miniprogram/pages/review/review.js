@@ -1,3 +1,4 @@
+// © 2026 LiuAohua. 版权所有，仅供学习参考，禁止商用与二次分发。
 // pages/review/review.js —— 复习测验 + 错题本（纯本地，无云、无付费）
 var LESSONS = require("../../data/questions.js");
 

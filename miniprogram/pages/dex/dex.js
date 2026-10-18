@@ -1,3 +1,4 @@
+// © 2026 LiuAohua. 版权所有，仅供学习参考，禁止商用与二次分发。
 // pages/dex/dex.js —— Python 知识卡册（已解锁的补充知识点，可回看）
 // 读取 index 页写入的本地收集记录 liam_boxdex_v1，纯本地、无云、无付费。
 var LESSONS = require("../../data/questions.js");

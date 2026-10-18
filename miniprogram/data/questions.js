@@ -1,3 +1,4 @@
+// © 2026 LiuAohua. 版权所有，仅供学习参考，禁止商用与二次分发。
 // data/questions.js —— 课程题库（被 index 游戏页 与 review 复习页 共用，避免重复）
 // 判定工具：归一化空白与引号（容忍空格/换行/单双引号差异）
 function norm(s) {
